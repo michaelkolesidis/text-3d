@@ -26,10 +26,8 @@ const matCapTexture = textureLoader.load("/textures/matcaps/1.png")
 /**
  * Fonts
  */
-// https://threejs.org/docs/index.html?q=fontloa#examples/en/loaders/FontLoader
 const fontLoader = new FontLoader();
 fontLoader.load(
-    // "/fonts/mamenchisa_regular.json",
     "/fonts/mori_semibold.json",
     (font) => {
         const textGeometry = new TextGeometry(
@@ -48,7 +46,7 @@ fontLoader.load(
         )
         textGeometry.center();
 
-        const material = new THREE.MeshMatcapMaterial({ // was textMaterial
+        const material = new THREE.MeshMatcapMaterial({
             matcap: matCapTexture
         })
 

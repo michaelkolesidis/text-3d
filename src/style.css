@@ -6,10 +6,7 @@
 html,
 body {
   overflow: hidden;
-    /* background: linear-gradient(#000000, #393939); */
-    /* background: linear-gradient(#ffa425, #de8912); */
-    background: linear-gradient(#1e0f69, #0D0630);
-
+  background: linear-gradient(#1e0f69, #0d0630);
 }
 
 body {
