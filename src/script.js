@@ -6,26 +6,28 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
 
 /**
- * Base
+ * Basics
  */
 // Debug
 const gui = new dat.GUI({ closed: false, width: 250 });
 
 // Canvas
-const canvas = document.querySelector('canvas.webgl')
+const canvas = document.querySelector('canvas.webgl');
 
 // Scene
-const scene = new THREE.Scene()
+const scene = new THREE.Scene();
 
 /**
  * Textures
  */
-const textureLoader = new THREE.TextureLoader()
-const matCapTexture = textureLoader.load("/textures/matcaps/1.png")
+const textureLoader = new THREE.TextureLoader();
+const matCapTexture = textureLoader.load("/textures/matcaps/1.png");
 
 /**
- * Fonts
+ * Fonts and Objects
  */
+const objects = [];
+
 const fontLoader = new FontLoader();
 fontLoader.load(
     "/fonts/mori_semibold.json",
@@ -43,11 +45,11 @@ fontLoader.load(
                 bevelOffset: 0,
                 bevelSegments: 5
             }
-        )
+        );
         textGeometry.center();
 
         const material = new THREE.MeshMatcapMaterial({
-            matcap: matCapTexture
+            matcap: matCapTexture,
         })
 
         const text = new THREE.Mesh(textGeometry, material);
@@ -60,7 +62,7 @@ fontLoader.load(
         for (let i = 0; i < 1200; i++) {
             
             let geometry;
-            const shape = Math.floor(Math.random() * 5)
+            const shape = Math.floor(Math.random() * 5);
             switch (shape) {
                 case 0:
                     geometry = donutGeometry;
@@ -92,10 +94,11 @@ fontLoader.load(
 
             mesh.scale.set(scale, scale, scale);
 
+            objects.push(mesh);
             scene.add(mesh);
         }
     }
-)
+);
 
 /**
  * Sizes
@@ -103,36 +106,36 @@ fontLoader.load(
 const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
-}
+};
 
 window.addEventListener('resize', () =>
 {
     // Update sizes
-    sizes.width = window.innerWidth
-    sizes.height = window.innerHeight
+    sizes.width = window.innerWidth;
+    sizes.height = window.innerHeight;
 
     // Update camera
-    camera.aspect = sizes.width / sizes.height
-    camera.updateProjectionMatrix()
+    camera.aspect = sizes.width / sizes.height;
+    camera.updateProjectionMatrix();
 
     // Update renderer
-    renderer.setSize(sizes.width, sizes.height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-})
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
 
 /**
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 10000)
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 10000);
 camera.position.x = 1;
 camera.position.y = 1;
 camera.position.z = 18;
-scene.add(camera)
+scene.add(camera);
 
 // Controls
-const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
 controls.autoRotate = false;
 controls.autoRotateSpeed = 0.5;
 controls.maxDistance = 50;
@@ -164,26 +167,31 @@ const renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha:  true,
 })
-renderer.setSize(sizes.width, sizes.height)
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.setSize(sizes.width, sizes.height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 /**
  * Animate
  */
 const clock = new THREE.Clock()
 
-const render = () =>
+const animate = () =>
 {
-    const elapsedTime = clock.getElapsedTime()
+    const elapsedTime = clock.getElapsedTime();
 
     // Update controls
-    controls.update()
+    controls.update();
+
+    // Animate objects
+    for (const object of objects) {
+        object.rotation.y = elapsedTime * 0.25;
+    }
 
     // Render
-    renderer.render(scene, camera)
+    renderer.render(scene, camera);
 
-    // Call tick again on the next frame
-    window.requestAnimationFrame(render)
+    // Call animate again on the next frame
+    window.requestAnimationFrame(animate);
 }
 
-render()
+animate();
