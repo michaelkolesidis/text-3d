@@ -185,6 +185,8 @@ const animate = () =>
     // Animate objects
     for (const object of objects) {
         object.rotation.y = elapsedTime * 0.25;
+        object.rotation.χ = elapsedTime * 0.15;
+
     }
 
     // Render
